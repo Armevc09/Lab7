@@ -1,0 +1,47 @@
+import cv2
+
+# URL de la cámara DroidCam (Reemplaza con la IP y puerto correctos)
+droidcam_url = "http://172.20.10.3:4747/video"
+
+# Abrir la cámara usando la URL de DroidCam
+cap = cv2.VideoCapture(droidcam_url)
+
+# Verificar si la cámara se abrió correctamente
+if not cap.isOpened():
+    print("Error: No se pudo abrir la cámara.")
+    exit()
+
+# Inicializar variables
+grayscale = False
+
+while True:
+    # Capturar un fotograma
+    ret, frame = cap.read()
+    
+    if not ret:
+        print("Error: No se pudo obtener el fotograma.")
+        break
+    
+    # Si se selecciona escala de grises, convertir a gris
+    if grayscale:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Convertir el frame en escala de grises a BGR para mostrarlo en una ventana de OpenCV
+        frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+    
+    # Mostrar el fotograma en la ventana
+    cv2.imshow('DroidCam Feed', frame)
+    
+    # Esperar la tecla del teclado
+    key = cv2.waitKey(1) & 0xFF
+    
+    # Cambiar entre escala de grises y RGB con la tecla 'g'
+    if key == ord('g'):
+        grayscale = not grayscale
+    
+    # Salir si se presiona la tecla 'q'
+    if key == ord('q'):
+        break
+
+# Liberar la cámara y cerrar las ventanas
+cap.release()
+cv2.destroyAllWindows()
