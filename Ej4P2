@@ -1,0 +1,65 @@
+import cv2
+import numpy as np
+
+# Dirección IP de DroidCam (ajústala a la IP y puerto que tienes)
+droidcam_url = "http://192.168.1.184:4747/video"  # Reemplaza con la IP y puerto correctos
+
+# Abrir la cámara usando DroidCam
+cap = cv2.VideoCapture(droidcam_url)
+
+if not cap.isOpened():
+    print("Error: No se pudo abrir DroidCam vía Wi-Fi")
+    exit()
+
+# Función para detectar el color en la imagen usando HSV
+def detect_color_hsv(frame):
+    hsv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    # Definir los rangos de color para rojo, verde y azul en HSV
+    lower_red = np.array([0, 120, 70])  # Ajuste para un rojo más preciso
+    upper_red = np.array([10, 255, 255])
+    
+    lower_green = np.array([36, 50, 70])  # Ajuste para un verde más preciso
+    upper_green = np.array([85, 255, 255])
+    
+    lower_blue = np.array([100, 150, 0])  # Ajuste para un azul más preciso
+    upper_blue = np.array([140, 255, 255])
+
+    # Crear máscaras para los colores
+    mask_red = cv2.inRange(hsv_image, lower_red, upper_red)
+    mask_green = cv2.inRange(hsv_image, lower_green, upper_green)
+    mask_blue = cv2.inRange(hsv_image, lower_blue, upper_blue)
+
+    # Verificar el color detectado
+    if cv2.countNonZero(mask_red) > 0:
+        return "Red"
+    elif cv2.countNonZero(mask_green) > 0:
+        return "Green"
+    elif cv2.countNonZero(mask_blue) > 0:
+        return "Blue"
+    else:
+        return "Color not detected"
+
+# Bucle para procesar los fotogramas
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        print("Error: No se pudo leer el fotograma")
+        break
+
+    # Detectar color en cada fotograma
+    color_detected = detect_color_hsv(frame)
+    
+    # Mostrar el color detectado en la terminal
+    print("Detected color:", color_detected)
+
+    # Mostrar la imagen capturada por DroidCam
+    cv2.imshow("DroidCam Feed", frame)
+
+    # Salir si se presiona la tecla 'q'
+    key = cv2.waitKey(1)
+    if key == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
