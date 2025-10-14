@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Dirección IP de DroidCam (ajústala a la IP y puerto que tienes)
-droidcam_url = "http://192.168.1.184:4747/video"  # Reemplaza con la IP y puerto correctos
+droidcam_url = "http://172.20.10.3:4747/video"  # Reemplaza con la IP y puerto correctos
 
 # Abrir la cámara usando DroidCam
 cap = cv2.VideoCapture(droidcam_url)
