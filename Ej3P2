@@ -1,0 +1,32 @@
+
+#3. Clase para procesar imágenes
+import cv2
+
+class ImageProcessor:
+    def __init__(self, image_path):
+        self.image = cv2.imread(image_path)
+    
+    def convert_to_rgb(self):
+        return cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+    
+    def convert_to_hsv(self):
+        return cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
+    
+    def convert_to_grayscale(self):
+        return cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+    
+    def show_image(self, image, title="Image"):
+        cv2.imshow(title, image)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+#Ejemplo de uso
+image_processor = ImageProcessor("colores/red.jpg")
+rgb_image = image_processor.convert_to_rgb()
+hsv_image = image_processor.convert_to_hsv()
+gray_image = image_processor.convert_to_grayscale()
+
+# Mostrar imágenes
+image_processor.show_image(rgb_image, "RGB Image")
+image_processor.show_image(hsv_image, "HSV Image")
+image_processor.show_image(gray_image, "Grayscale Image")
